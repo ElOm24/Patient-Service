@@ -2,12 +2,31 @@ stages:
   - build
   - test
 
-build:
+build_image:
   stage: build
-  image: maven:3.9.9-eclipse-temurin-17
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
   script:
-    - cd patient-service
-    - mvn -q -DskipTests package
+    - mkdir -p /kaniko/.docker
+    - >
+      cat > /kaniko/.docker/config.json <<EOF
+      {
+        "auths": {
+          "${CI_REGISTRY}": {
+            "username": "${CI_REGISTRY_USER}",
+            "password": "${CI_REGISTRY_PASSWORD}"
+          }
+        }
+      }
+      EOF
+
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}/patient-service"
+      --dockerfile "${CI_PROJECT_DIR}/patient-service/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}/patient-service:${CI_COMMIT_SHA}"
+      --destination "${CI_REGISTRY_IMAGE}/patient-service:latest"
+
 
 test:
   stage: test

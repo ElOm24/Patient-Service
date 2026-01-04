@@ -1,0 +1,28 @@
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  image: docker:27
+  services:
+    - name: docker:27-dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+  script:
+    - docker info
+    - docker build -t as3-patient-service:ci ./patient-service
+
+test:
+  stage: test
+  image: maven:3.9.9-eclipse-temurin-17
+  services:
+    - name: mongo:7
+      alias: mongo
+  variables:
+    SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/patients
+  script:
+    - cd patient-service
+    - mvn -q test

@@ -1,7 +1,6 @@
 stages:
   - build
   - test
-
 build_image:
   stage: build
   image:
@@ -9,18 +8,7 @@ build_image:
     entrypoint: [""]
   script:
     - mkdir -p /kaniko/.docker
-    - >
-      cat > /kaniko/.docker/config.json <<EOF
-      {
-        "auths": {
-          "${CI_REGISTRY}": {
-            "username": "${CI_REGISTRY_USER}",
-            "password": "${CI_REGISTRY_PASSWORD}"
-          }
-        }
-      }
-      EOF
-
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor
       --context "${CI_PROJECT_DIR}/patient-service"
       --dockerfile "${CI_PROJECT_DIR}/patient-service/Dockerfile"

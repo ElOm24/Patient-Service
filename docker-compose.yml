@@ -1,0 +1,24 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: as3-mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: patients
+    volumes:
+      - mongo_data:/data/db
+
+  patient-service:
+    build:
+      context: ./patient-service
+    container_name: as3-patient-service
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/patients
+    depends_on:
+      - mongo
+
+volumes:
+  mongo_data:

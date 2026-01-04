@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.model.Patient;
 import com.example.repository.PatientRepository;
+import com.example.web.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class PatientService {
     }
 
     public Patient getPatientById(String id) {
-        return patientRepository.findById(id).orElseThrow(() -> new RuntimeException("Patient not found!"));
+        return patientRepository.findById(id).orElseThrow(() -> new NotFoundException("Patient not found: " + id));
     }
 
     public Patient createPatient(Patient patient) {
@@ -42,8 +43,9 @@ public class PatientService {
 
     public void deletePatient(String id) {
         if (!patientRepository.existsById(id)) {
-            throw new RuntimeException("Patient not found!");
+            throw new NotFoundException("Patient not found, womp womp: " + id);
         }
         patientRepository.deleteById(id);
     }
+
 }

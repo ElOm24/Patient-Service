@@ -38,11 +38,11 @@ public class Patient {
     }
 
     public Patient(String firstName,
-                   String lastName,
-                   String gender,
-                   LocalDate dateOfBirth,
-                   String email,
-                   String contactNumber) {
+            String lastName,
+            String gender,
+            LocalDate dateOfBirth,
+            String email,
+            String contactNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;

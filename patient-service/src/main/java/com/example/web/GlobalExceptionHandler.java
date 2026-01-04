@@ -24,7 +24,6 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.NOT_FOUND, ex.getMessage(), ex, req, false);
     }
 
-    // Ошибки валидации @Valid (например пустое имя, неверный email и т.д.)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex,
             HttpServletRequest req) {
@@ -38,14 +37,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
-    // Ловим всё остальное
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneric(Exception ex, HttpServletRequest req) {
-        // ВАЖНО: логируем stacktrace, иначе ты никогда не узнаешь причину 500
         log.error("Unhandled error on {} {}", req.getMethod(), req.getRequestURI(), ex);
 
-        // На время отладки полезно вернуть реальное сообщение:
-        // потом можно заменить message на "Unexpected error"
         return build(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex, req, true);
     }
 

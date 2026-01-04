@@ -13,7 +13,7 @@ public class PatientClient {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        // CREATE patient (POST)
+        // creating new patient
         Map<String, Object> newPatient = Map.of(
                 "firstName", "Elina",
                 "lastName", "Omurkulova",
@@ -27,7 +27,7 @@ public class PatientClient {
         System.out.println("CREATE RESPONSE:");
         System.out.println(created.getBody());
 
-        // GET all patients
+        // getting all patients
         String allPatients = restTemplate.getForObject(BASE_URL, String.class);
 
         System.out.println("\nALL PATIENTS:");
